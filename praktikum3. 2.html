@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Form Pemesanan Barang - Demo</title>
+  <style>
+    :root{
+      --bg:#f6f7f8;
+      --panel:#ffffff;
+      --muted:#7a7a7a;
+      --accent:#2e8b57;
+      --border:#d6d6d6;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    body
+  {background: linear-gradient(180deg,var(--bg),#fff);
+      padding:24px;
+      color:#222;}
+    .container{
+      max-width:920px;
+      margin:0 auto;
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:6px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.04);
+      padding:20px;}
+    h1{ margin:0 0 12px 0; font-size:18px;}
+    .layout{
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      gap:18px;
+      align-items:start;}
+    .photo-box{
+      border:1px dashed var(--border);
+      height:260px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#fafafa;
+      position:relative;
+      flex-direction:column;
+      padding:8px;
+    }
+    .photo-box img{
+      max-width:100%;
+      max-height:220px;
+      object-fit:contain;
+      border-radius:4px;
+      background:#fff;
+      border:1px solid var(--border);
+    }
+    .upload-btn{
+      margin-top:8px;
+      display:block;
+    }
+
+    /* form fields */
+    label{ display:block; font-size:13px; margin-bottom:6px; color:var(--muted);}
+    input[type="text"], input[type="email"], input[type="number"], textarea, select {
+      width:100%;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:4px;
+      box-sizing:border-box;
+      font-size:14px;
+      background:#fff;
+    }
+    textarea{ min-height:86px; resize:vertical; }
+
+    .row{ margin-bottom:12px; }
+    .small-row{ display:flex; gap:10px; }
+    .small-row > * { flex:1; }
+    .checkbox-row{ display:flex; gap:12px; align-items:center; font-size:14px; color:var(--muted);}
+
+    .btn{
+      display:inline-block;
+      padding:10px 16px;
+      border-radius:6px;
+      border:0;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .btn-accent{ background:var(--accent); color:#fff; }
+    .btn-ghost{ background:#eee; color:#333; border:1px solid var(--border); }
+
+    /* hasil */
+    #resultView{ display:none; }
+    .field-view{ margin-bottom:10px; }
+    .label-view{ font-size:13px; color:var(--muted); margin-bottom:4px; }
+    .value-view{ font-weight:600; background:#fbfbfb; padding:8px; border-radius:4px; border:1px solid var(--border); }
+
+    footer{ margin-top:18px; text-align:right; color:var(--muted); font-size:13px; }
+    @media (max-width:720px){
+      .layout{ grid-template-columns:1fr; }
+      .photo-box{ height:200px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Form Pemesanan Barang</h1>
+    <form id="orderForm" class="layout" autocomplete="off">
+      <div>
+        <div class="photo-box" id="photoBox">
+          <div id="photoPlaceholder" style="text-align:center">
+            <div style="font-size:14px;color:var(--muted)">Preview Gambar</div>
+          </div>
+          <img id="previewImg" alt="preview" style="display:none" />
+          <input type="file" id="photoInput" accept="image/*" style="margin-top:10px" />
+          <button type="button" class="btn btn-ghost upload-btn" id="clearPhotoBtn" style="display:none">Hapus Gambar</button>
+        </div>
+      </div>
+      <div>
+        <div class="row">
+          <label for="title">Title Name</label>
+          <input id="title" name="title" type="text" placeholder="LG-GN B2025QIF" required />
+        </div>
+
+        <div class="row small-row">
+          <div>
+            <label for="year">Year</label>
+            <input id="year" name="year" type="text" placeholder="2025" />
+          </div>
+          <div>
+            <label for="model">Model</label>
+            <input id="model" name="model" type="text" placeholder="KULKAS 2 PINTU" />
+          </div>
+        </div>
+
+        <div class="row">
+          <label for="condition">Condition</label>
+          <input id="condition" name="condition" type="text" placeholder="NEW" />
+        </div>
+
+        <div class="row">
+          <label for="accountNumber">Account Number</label>
+          <input id="accountNumber" name="accountNumber" type="text" placeholder="082-056-789-810" />
+        </div>
+
+        <div class="row">
+          <label for="bank">Bank</label>
+          <select id="bank" name="bank">
+            <option value="">-- Pilih Bank --</option>
+            <option>Mandiri</option>
+            <option>BNI</option>
+            <option>BRI</option>
+            <option>BCA</option>
+            <option>BSI</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label for="accountHolder">Account Holder</label>
+          <input id="accountHolder" name="accountHolder" type="text" placeholder="CONTOH DIMAS" />
+        </div>
+
+        <div class="row">
+          <label for="transactionType">Transaction</label>
+          <select id="transactionType" name="transactionType">
+            <option value="1">1 Person</option>
+            <option value="2">2 Person</option>
+            <option value="3">3 Person</option>
+          </select>
+        </div>
+
+        <div class="row checkbox-row">
+          <label><input type="checkbox" id="sendMobileCheck"> Send to Mobile Phone</label>
+          <label><input type="checkbox" id="sendEmailCheck"> Send to Email</label>
+        </div>
+         <div class="row">
+          <label for="mobile">Send to Mobile Phone</label>
+          <input id="mobile" name="mobile" type="text" placeholder="08123456789" />
+        </div>
+
+        <div class="row">
+          <label for="email">Send to Email</label>
+          <input id="email" name="email" type="email" placeholder="nama@contoh.com" />
+        </div>
+
+        <div style="margin-top:10px">
+          <button type="button" id="generateBtn" class="btn btn-accent">Generate Ngalir Link</button>
+          <button type="reset" class="btn btn-ghost" style="margin-left:8px">Reset</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="resultView" aria-hidden="true">
+      <h1>Hasil Form Pemesanan Barang</h1>
+      <div style="display:flex; gap:18px; align-items:flex-start; margin-top:12px;">
+        <div style="width:260px;">
+          <div style="border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">
+            <img id="resultImg" alt="result image" style="max-width:100%; display:block; object-fit:contain;" />
+          </div>
+        </div>
+        <div style="flex:1;">
+          <div class="field-view">
+            <div class="label-view">Title</div>
+            <div class="value-view" id="viewTitle"></div>
+          </div>
+
+          <div class="field-view small-row" style="display:flex; gap:10px;">
+            <div style="flex:1;">
+              <div class="label-view">Year</div>
+              <div class="value-view" id="viewYear"></div>
+            </div>
+            <div style="flex:1;">
+              <div class="label-view">Model</div>
+              <div class="value-view" id="viewModel"></div>
+            </div>
+          </div>
+
+          <div class="field-view">
+            <div class="label-view">Condition</div>
+            <div class="value-view" id="viewCondition"></div>
+          </div>
+
+          <div class="field-view">
+            <div class="label-view">Pay to (Account Number)</div>
+            <div class="value-view" id="viewAccountNumber"></div>
+          </div>
+
+          <div class="field-view">
+            <div class="label-view">Payment Type (Bank)</div>
+            <div class="value-view" id="viewBank"></div>
+          </div>
+
+          <div class="field-view">
+            <div class="label-view">Account Holder</div>
+            <div class="value-view" id="viewAccountHolder"></div>
+          </div>
+
+          <div class="field-view">
+            <div class="label-view">Send to Mobile / Email</div>
+            <div class="value-view" id="viewSendTo"></div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <button id="payBtn" class="btn btn-accent">Pay using QuickLink</button>
+            <button id="backBtn" class="btn btn-ghost" style="margin-left:8px">Back / Edit</button>
+          </div>
+        </div>
+      </div>
+      <footer>Preview hasil input dari form Anda</footer>
+    </div>
+  </div>
+
+  <script>
+    // Elemen
+    const photoInput = document.getElementById('photoInput');
+    const previewImg = document.getElementById('previewImg');
+    const photoPlaceholder = document.getElementById('photoPlaceholder');
+    const clearPhotoBtn = document.getElementById('clearPhotoBtn');
+
+    let uploadedDataUrl = null;
+
+    photoInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return resetPhoto();
+      if (!file.type.startsWith('image/')) {
+        alert('Silakan pilih file gambar.');
+        photoInput.value = '';
+        return resetPhoto();
+      }
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        uploadedDataUrl = ev.target.result;
+        previewImg.src = uploadedDataUrl;
+        previewImg.style.display = 'block';
+        photoPlaceholder.style.display = 'none';
+        clearPhotoBtn.style.display = 'inline-block';
+      }
+      reader.readAsDataURL(file);
+    });
+
+    clearPhotoBtn.addEventListener('click', resetPhoto);
+
+    function resetPhoto() {
+      uploadedDataUrl = null;
+      previewImg.src = '';
+      previewImg.style.display = 'none';
+      photoInput.value = '';
+      photoPlaceholder.style.display = 'block';
+      clearPhotoBtn.style.display = 'none';
+    }
+
+    // Generate result
+    const generateBtn = document.getElementById('generateBtn');
+    const form = document.getElementById('orderForm');
+    const resultView = document.getElementById('resultView');
+
+    generateBtn.addEventListener('click', () => {
+      // ambil nilai
+      const title = document.getElementById('title').value.trim();
+      if (!title) {
+        alert('Mohon isi title (nama barang).');
+        document.getElementById('title').focus();
+        return;
+      }
+      // ambil semua field lain
+      const year = document.getElementById('year').value.trim();
+      const model = document.getElementById('model').value.trim();
+      const condition = document.getElementById('condition').value.trim();
+      const accountNumber = document.getElementById('accountNumber').value.trim();
+      const bank = document.getElementById('bank').value;
+      const accountHolder = document.getElementById('accountHolder').value.trim();
+      const transactionType = document.getElementById('transactionType').value;
+      const mobile = document.getElementById('mobile').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const sendMobile = document.getElementById('sendMobileCheck').checked;
+      const sendEmail = document.getElementById('sendEmailCheck').checked;
+
+      // tampilkan hasil
+      document.getElementById('viewTitle').textContent = title;
+      document.getElementById('viewYear').textContent = year || '-';
+      document.getElementById('viewModel').textContent = model || '-';
+      document.getElementById('viewCondition').textContent = condition || '-';
+      document.getElementById('viewAccountNumber').textContent = accountNumber || '-';
+      document.getElementById('viewBank').textContent = bank || '-';
+      document.getElementById('viewAccountHolder').textContent = accountHolder || '-';
+
+      let sendToText = [];
+      if (sendMobile) sendToText.push('Mobile: ' + (mobile || '(nomor kosong)'));
+      if (sendEmail) sendToText.push('Email: ' + (email || '(email kosong)'));
+      if (sendToText.length === 0) sendToText = ['(tidak ada pengiriman)'];
+      document.getElementById('viewSendTo').textContent = sendToText.join(' | ');
+
+      // gambar hasil
+      const resultImg = document.getElementById('resultImg');
+      if (uploadedDataUrl) {
+        resultImg.src = uploadedDataUrl;
+        resultImg.style.display = 'block';
+      } else {
+        resultImg.src = '';
+        resultImg.style.display = 'none';
+      }
+
+      // hide form, show result
+      form.style.display = 'none';
+      resultView.style.display = 'block';
+      resultView.setAttribute('aria-hidden','false');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // back / edit
+    document.getElementById('backBtn').addEventListener('click', () => {
+      resultView.style.display = 'none';
+      form.style.display = 'grid';
+      resultView.setAttribute('aria-hidden','true');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // pay button simulasikan aksi
+    document.getElementById('payBtn').addEventListener('click', () => {
+      alert('Simulasi: Mengarahkan ke sistem pembayaran (QuickLink) ...');
+    });
+
+    // inisialisasi
+    resetPhoto();
+  </script>
+</body>
+</html>
